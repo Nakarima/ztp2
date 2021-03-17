@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="MessDetector">
+    <phpmd_settings>
+      <MessDetectorConfiguration tool_path="$PROJECT_DIR$/app/vendor/phpmd/phpmd/src/bin/phpmd" />
+    </phpmd_settings>
+  </component>
+  <component name="PhpCSFixer">
+    <phpcsfixer_settings>
+      <PhpCSFixerConfiguration standards="PSR1;PSR2;Symfony;DoctrineAnnotation;PHP70Migration;PHP71Migration" tool_path="$PROJECT_DIR$/app/vendor/friendsofphp/php-cs-fixer/php-cs-fixer" />
+    </phpcsfixer_settings>
+  </component>
+  <component name="PhpCodeSniffer">
+    <phpcs_settings>
+      <PhpCSConfiguration beautifier_path="$PROJECT_DIR$/app/vendor/bin/phpcbf" standards="MySource;PEAR;PSR1;PSR12;PSR2;Squiz;Symfony;Zend" tool_path="$PROJECT_DIR$/app/vendor/bin/phpcs" />
+    </phpcs_settings>
+  </component>
+  <component name="PhpProjectSharedConfiguration" php_language_level="7.4">
+    <option name="suggestChangeDefaultLanguageLevel" value="false" />
+  </component>
+</project>

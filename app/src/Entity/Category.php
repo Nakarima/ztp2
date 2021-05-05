@@ -1,20 +1,22 @@
 <?php
 /**
- * Bug.
+ * Category.
  */
 
 namespace App\Entity;
 
 use DateTimeInterface;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Class Bug.
+ * Class Category.
  *
- * @ORM\Entity(repositoryClass="App\Repository\BugRepository")
- * @ORM\Table(name="bugs")
+ * @ORM\Entity(repositoryClass="App\Repository\CategoryRepository")
+ * @ORM\Table(name="categories")
  */
-class Bug
+class Category
 {
     /**
      * Primary key.
@@ -37,15 +39,6 @@ class Bug
     private $title;
 
     /**
-     * Description.
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", length=255)
-     */
-    private $description;
-
-    /**
      * Updated at.
      *
      * @var DateTimeInterface
@@ -64,10 +57,14 @@ class Bug
     private $createdAt;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Category::class, inversedBy="bugs")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\OneToMany(targetEntity=Bug::class, mappedBy="category")
      */
-    private $category;
+    private $bugs;
+
+    public function __construct()
+    {
+        $this->bugs = new ArrayCollection();
+    }
 
     /**
      * Getter for Id.
@@ -97,26 +94,6 @@ class Bug
     public function setTitle(string $title): void
     {
         $this->title = $title;
-    }
-
-    /**
-     * Getter for Description.
-     *
-     * @return string|null Title
-     */
-    public function getDescription(): ?string
-    {
-        return $this->description;
-    }
-
-    /**
-     * Setter for Description.
-     *
-     * @param string $description Description
-     */
-    public function setDescription(string $description): void
-    {
-        $this->description = $description;
     }
 
     /**
@@ -159,14 +136,32 @@ class Bug
         $this->createdAt = $createdAt;
     }
 
-    public function getCategory(): ?Category
+    /**
+     * @return Collection|Bug[]
+     */
+    public function getBugs(): Collection
     {
-        return $this->category;
+        return $this->bugs;
     }
 
-    public function setCategory(?Category $category): self
+    public function addBug(Bug $bug): self
     {
-        $this->category = $category;
+        if (!$this->bugs->contains($bug)) {
+            $this->bugs[] = $bug;
+            $bug->setCategory($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBug(Bug $bug): self
+    {
+        if ($this->bugs->removeElement($bug)) {
+            // set the owning side to null (unless already changed)
+            if ($bug->getCategory() === $this) {
+                $bug->setCategory(null);
+            }
+        }
 
         return $this;
     }

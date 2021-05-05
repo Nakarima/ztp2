@@ -123,6 +123,12 @@
     "friendsofphp/proxy-manager-lts": {
         "version": "v1.0.3"
     },
+    "knplabs/knp-components": {
+        "version": "v3.0.2"
+    },
+    "knplabs/knp-paginator-bundle": {
+        "version": "v5.4.2"
+    },
     "laminas/laminas-code": {
         "version": "3.4.1"
     },
@@ -565,6 +571,9 @@
         "version": "v4.4.20"
     },
     "twig/extra-bundle": {
+        "version": "v3.3.0"
+    },
+    "twig/intl-extra": {
         "version": "v3.3.0"
     },
     "twig/twig": {

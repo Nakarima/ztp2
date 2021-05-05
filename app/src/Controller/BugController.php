@@ -8,6 +8,7 @@ namespace App\Controller;
 use App\Entity\Bug;
 use App\Service\BugService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -25,7 +26,6 @@ class BugController extends AbstractController
 
     /**
      * BugController constructor.
-     * @param BugService $bugService
      */
     public function __construct(BugService $bugService)
     {
@@ -35,6 +35,7 @@ class BugController extends AbstractController
     /**
      * Index action.
      *
+     * @param Request $request
      *
      * @return \Symfony\Component\HttpFoundation\Response HTTP response
      *
@@ -44,11 +45,14 @@ class BugController extends AbstractController
      *     name="bug_index",
      * )
      */
-    public function index(): Response
+    public function index(Request $request): Response
     {
+        $page = $request->query->getInt('page', 1);
+        $pagination = $this->bugService->getAll($page);
+
         return $this->render(
             'bug/index.html.twig',
-            ['bugs' => $this->bugService->getAll()]
+            ['pagination' => $pagination]
         );
     }
 

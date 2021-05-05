@@ -5,8 +5,9 @@
 
 namespace App\Service;
 
-use App\Entity\Bug;
 use App\Repository\BugRepository;
+use Knp\Component\Pager\Pagination\PaginationInterface;
+use Knp\Component\Pager\PaginatorInterface;
 
 /**
  * Class BugService.
@@ -19,21 +20,34 @@ class BugService
     private $bugRepository;
 
     /**
-     * BugController constructor.
-     * @param BugRepository $bugRepository
+     * @var PaginatorInterface
      */
-    public function __construct(BugRepository $bugRepository)
+    private $paginator;
+
+    /**
+     * BugController constructor.
+     *
+     * @param BugRepository      $bugRepository
+     * @param PaginatorInterface $paginator
+     */
+    public function __construct(BugRepository $bugRepository, PaginatorInterface $paginator)
     {
         $this->bugRepository = $bugRepository;
+        $this->paginator = $paginator;
     }
 
     /**
      * Returns all bugs.
+     * @param int $page
      *
-     * @return Bug[]
+     * @return PaginationInterface
      */
-    public function getAll(): array
+    public function getAll(int $page): PaginationInterface
     {
-        return $this->bugRepository->findAll();
+        return $this->paginator->paginate(
+            $this->bugRepository->queryAll(),
+            $page,
+            BugRepository::PAGINATOR_ITEMS_PER_PAGE
+        );
     }
 }

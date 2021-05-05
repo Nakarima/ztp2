@@ -6,24 +6,31 @@
 
 {% block body %}
     <h1>{{ 'title_bug_list'|trans }}</h1>
-    {% if bugs is defined and bugs|length %}
+    {% if pagination is defined and pagination.items|length %}
+
+        <div class="navigation text-center">
+            {{ knp_pagination_render(pagination) }}
+        </div>
+
         <table class="table table-striped">
             <thead>
             <tr>
-                <th>{{ 'label_id'|trans }}</th>
-                <th>{{ 'label_created_at'|trans }}</th>
-                <th>{{ 'label_updated_at'|trans }}</th>
-                <th>{{ 'label_title'|trans }}</th>
+                <th>{{ knp_pagination_sortable(pagination, 'label_id'|trans, 'bug.id') }}</th>
+                <th>{{ knp_pagination_sortable(pagination, 'label_created_at'|trans, 'bug.createdAt') }}</th>
+                <th>{{ knp_pagination_sortable(pagination, 'label_updated_at'|trans, 'bug.updatedAt') }}</th>
+                <th>{{ knp_pagination_sortable(pagination, 'label_title'|trans, 'bug.title') }}</th>
+                <th>{{ 'label_category'|trans }}</th>
                 <th>{{ 'label_actions'|trans }}</th>
             </tr>
             </thead>
             <tbody>
-            {% for bug in bugs %}
+            {% for bug in pagination.items %}
                 <tr>
                     <td>{{ bug.id }}</td>
-                    <td>{{ bug.createdAt|date('Y/m/d') }}</td>
-                    <td>{{ bug.updatedAt|date('Y/m/d') }}</td>
+                    <td>{{ bug.createdAt|format_date('long') }}</td>
+                    <td>{{ bug.createdAt|format_date('long') }}</td>
                     <td>{{ bug.title }}</td>
+                    <td>{{ bug.category.title }}</td>
                     <td>
                         <a href="{{ url('bug_show', {id: bug.id}) }}" title="{{ 'action_view'|trans }}">
                             {{ 'action_view'|trans }}
@@ -33,9 +40,15 @@
             {% endfor %}
             </tbody>
         </table>
+
+        <div class="navigation text-center">
+            {{ knp_pagination_render(pagination) }}
+        </div>
+
     {% else %}
-        <p>
-            {{ 'message_empty_list'|trans }}
-        </p>
+        {% include 'default/_single_flash_message.html.twig' with {
+            type: 'warning',
+            message: 'message.empty_list'|trans
+        } %}
     {% endif %}
 {% endblock %}

@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {{ 'title_bug_list'|trans }}
+{% endblock %}
+
+{% block body %}
+    <h1>{{ 'title_bug_list'|trans }}</h1>
+    {% if bugs is defined and bugs|length %}
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>{{ 'label_id'|trans }}</th>
+                <th>{{ 'label_created_at'|trans }}</th>
+                <th>{{ 'label_updated_at'|trans }}</th>
+                <th>{{ 'label_title'|trans }}</th>
+                <th>{{ 'label_actions'|trans }}</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for bug in bugs %}
+                <tr>
+                    <td>{{ bug.id }}</td>
+                    <td>{{ bug.createdAt|date('Y/m/d') }}</td>
+                    <td>{{ bug.updatedAt|date('Y/m/d') }}</td>
+                    <td>{{ bug.title }}</td>
+                    <td>
+                        <a href="{{ url('bug_show', {id: bug.id}) }}" title="{{ 'action_view'|trans }}">
+                            {{ 'action_view'|trans }}
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>
+            {{ 'message_empty_list'|trans }}
+        </p>
+    {% endif %}
+{% endblock %}

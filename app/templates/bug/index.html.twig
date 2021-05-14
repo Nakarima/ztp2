@@ -6,10 +6,12 @@
 
 {% block body %}
     <h1>{{ 'title_bug_list'|trans }}</h1>
-    <button type="button" class="btn btn-primary">
-        <a class="text-light" href="{{ url('bug_create') }}" title="{{ 'action_create'|trans }}">
-            {{ 'action_create'|trans }} </a>
-    </button>
+    {% if is_granted('ROLE_ADMIN') %}
+        <button type="button" class="btn btn-primary">
+            <a class="text-light" href="{{ url('bug_create') }}" title="{{ 'action_create'|trans }}">
+                {{ 'action_create'|trans }} </a>
+        </button>
+    {% endif %}
     {% if pagination is defined and pagination.items|length %}
 
         <div class="navigation text-center">

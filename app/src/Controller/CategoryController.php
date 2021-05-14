@@ -101,6 +101,8 @@ class CategoryController extends AbstractController
      */
     public function create(Request $request): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
         $category = new Category();
         $form = $this->createForm(CategoryType::class, $category);
         $form->handleRequest($request);
@@ -138,6 +140,8 @@ class CategoryController extends AbstractController
      */
     public function edit(Request $request, int $categoryId): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
         $category = $this->categoryService->getById($categoryId);
         $form = $this->createForm(CategoryType::class, $category, ['method' => 'PUT']);
         $form->handleRequest($request);
@@ -179,10 +183,12 @@ class CategoryController extends AbstractController
      */
     public function delete(Request $request, int $categoryId): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
         $category = $this->categoryService->getById($categoryId);
 
         if ($category->getBugs()->count()) {
-            $this->addFlash('warning', 'message_category_contains_tasks');
+            $this->addFlash('warning', 'message_category_contains_bugs');
 
             return $this->redirectToRoute('category_index');
         }

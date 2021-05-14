@@ -8,6 +8,7 @@ namespace App\Controller;
 use App\Entity\Bug;
 use App\Form\BugType;
 use App\Service\BugService;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\HttpFoundation\Request;
@@ -101,6 +102,8 @@ class BugController extends AbstractController
      */
     public function create(Request $request): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
         $bug = new Bug();
         $form = $this->createForm(BugType::class, $bug);
         $form->handleRequest($request);
@@ -138,6 +141,8 @@ class BugController extends AbstractController
      */
     public function edit(Request $request, int $bugId): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
         $bug = $this->bugService->getById($bugId);
         $form = $this->createForm(BugType::class, $bug, ['method' => 'PUT']);
         $form->handleRequest($request);
@@ -179,6 +184,8 @@ class BugController extends AbstractController
      */
     public function delete(Request $request, int $bugId): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
         $bug = $this->bugService->getById($bugId);
         $form = $this->createForm(FormType::class, $bug, ['method' => 'DELETE']);
         $form->handleRequest($request);

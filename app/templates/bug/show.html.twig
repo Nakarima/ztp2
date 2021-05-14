@@ -15,22 +15,26 @@
             <dt>{{ 'label_updated_at'|trans }}</dt>
             <dd>{{ bug.createdAt|format_date('long') }}</dd>
             <dt>{{ 'label_title'|trans }}</dt>
-            <dd>{{  bug.title }}</dd>
+            <dd>{{ bug.title }}</dd>
             <dt>{{ 'label_description'|trans }}</dt>
-            <dd>{{  bug.description }}</dd>
+            <dd>{{ bug.description }}</dd>
             <dt>{{ 'label_category'|trans }}</dt>
-            <dd>{{  bug.category.title }}</dd>
+            <dd>{{ bug.category.title }}</dd>
             <dt>{{ 'label_author'|trans }}</dt>
-            <dd>{{  bug.author.email }}</dd>
+            <dd>{{ bug.author.email }}</dd>
         </dl>
-        <button type="button" class="btn btn-primary">
-            <a class="text-light" href="{{ url('bug_edit', {'bugId': bug.id}) }}" title="{{ 'action_update'|trans }}">
-                {{ 'action_update'|trans }} </a>
-        </button>
-        <button type="button" class="btn btn-primary">
-            <a class="text-light" href="{{ url('bug_delete', {'bugId': bug.id}) }}" title="{{ 'action_delete'|trans }}">
-                {{ 'action_delete'|trans }} </a>
-        </button>
+        {% if is_granted('ROLE_ADMIN') %}
+            <button type="button" class="btn btn-primary">
+                <a class="text-light" href="{{ url('bug_edit', {'bugId': bug.id}) }}"
+                   title="{{ 'action_update'|trans }}">
+                    {{ 'action_update'|trans }} </a>
+            </button>
+            <button type="button" class="btn btn-primary">
+                <a class="text-light" href="{{ url('bug_delete', {'bugId': bug.id}) }}"
+                   title="{{ 'action_delete'|trans }}">
+                    {{ 'action_delete'|trans }} </a>
+            </button>
+        {% endif %}
         <p>
             <a href="{{ url('bug_index') }}" title="{{ 'action_back_to_list'|trans }}">
                 {{ 'action_back_to_list'|trans }}

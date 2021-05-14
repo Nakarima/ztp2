@@ -24,6 +24,7 @@
                 <th>{{ knp_pagination_sortable(pagination, 'label_updated_at'|trans, 'bug.updatedAt') }}</th>
                 <th>{{ knp_pagination_sortable(pagination, 'label_title'|trans, 'bug.title') }}</th>
                 <th>{{ 'label_category'|trans }}</th>
+                <th>{{ 'label_author'|trans }}</th>
                 <th>{{ 'label_actions'|trans }}</th>
             </tr>
             </thead>
@@ -35,6 +36,7 @@
                     <td>{{ bug.createdAt|format_date('long') }}</td>
                     <td>{{ bug.title }}</td>
                     <td>{{ bug.category.title }}</td>
+                    <td>{{ bug.author.email }}</td>
                     <td>
                         <a href="{{ url('bug_show', {bugId: bug.id}) }}" title="{{ 'action_view'|trans }}">
                             {{ 'action_view'|trans }}

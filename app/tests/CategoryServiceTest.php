@@ -3,8 +3,10 @@
 namespace App\Tests;
 
 use App\Entity\Category;
+use App\Entity\User;
 use App\Repository\CategoryRepository;
 use App\Service\CategoryService;
+use App\Service\UserService;
 use Faker\Factory;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
@@ -49,16 +51,15 @@ class CategoryServiceTest extends KernelTestCase
         $this->faker = Factory::create();
         $container = self::$container;
         $categoryService = $container->get(CategoryService::class);
+        $user = $this->createUser($container);
 
-        $category = new Category();
-        $title = $this->faker->word();
-        $category->setTitle($title);
-        $categoryService->createCategory($category);
+        $category = $this->createCategory();
+        $categoryService->createCategory($category, $user);
         $id = $category->getId();
 
         $createdCategory = $categoryService->getById($id);
 
-        $this->assertEquals($title, $createdCategory->getTitle());
+        $this->assertEquals($category, $createdCategory);
     }
 
     public function testUpdate()
@@ -67,13 +68,12 @@ class CategoryServiceTest extends KernelTestCase
         $this->faker = Factory::create();
         $container = self::$container;
         $categoryService = $container->get(CategoryService::class);
+        $user = $this->createUser($container);
 
-        $category = new Category();
-        $title = $this->faker->word();
+        $category = $this->createCategory();
         $newTitle = $this->faker->word();
 
-        $category->setTitle($title);
-        $categoryService->createCategory($category);
+        $categoryService->createCategory($category, $user);
         $id = $category->getId();
         $createdCategory = $categoryService->getById($id);
 
@@ -82,7 +82,6 @@ class CategoryServiceTest extends KernelTestCase
         $updatedCategory = $categoryService->getById($id);
 
         $this->assertEquals($newTitle, $updatedCategory->getTitle());
-        $this->assertEquals($category->getTitle(), $updatedCategory->getTitle());
     }
 
     public function testDelete()
@@ -91,12 +90,10 @@ class CategoryServiceTest extends KernelTestCase
         $this->faker = Factory::create();
         $container = self::$container;
         $categoryService = $container->get(CategoryService::class);
+        $user = $this->createUser($container);
 
-        $category = new Category();
-        $title = $this->faker->word();
-
-        $category->setTitle($title);
-        $categoryService->createCategory($category);
+        $category = $this->createCategory();
+        $categoryService->createCategory($category, $user);
         $id = $category->getId();
         $createdCategory = $categoryService->getById($id);
 
@@ -112,24 +109,21 @@ class CategoryServiceTest extends KernelTestCase
         $this->faker = Factory::create();
         $container = self::$container;
         $categoryService = $container->get(CategoryService::class);
+        $user = $this->createUser($container);
 
         // create second page
-        array_map(function () use ($categoryService) {
-            $category = new Category();
-            $title = $this->faker->word();
-            $category->setTitle($title);
-            $categoryService->createCategory($category);
+        array_map(function () use ($user, $categoryService) {
+            $category = $this->createCategory();
+            $categoryService->createCategory($category, $user);
 
             return $category;
         }, range(1, CategoryRepository::PAGINATOR_ITEMS_PER_PAGE));
 
         sleep(1);
 
-        $created = array_map(function () use ($categoryService) {
-            $category = new Category();
-            $title = $this->faker->word();
-            $category->setTitle($title);
-            $categoryService->createCategory($category);
+        $created = array_map(function () use ($user, $categoryService) {
+            $category = $this->createCategory();
+            $categoryService->createCategory($category, $user);
             sleep(1); // hack motzno, w scali można zrobić tick time na threadzie
 
             return $category->getId();
@@ -142,17 +136,25 @@ class CategoryServiceTest extends KernelTestCase
         $this->assertEquals(array_reverse($created), $firstPage);
     }
 
-    /*
+    private function createUser($container): User
+    {
+        $userService = $container->get(UserService::class);
+        $user = new User();
+        $user->setEmail($this->faker->email());
+        $user->setRoles([User::ROLE_USER, User::ROLE_ADMIN]);
+        $user->setPassword($this->faker->password());
+        $userService->createUser($user);
 
-        public function testGetAll()
-        {
-            self::bootKernel();
-            $container = self::$container;
-            $categoryService = $container->get(CategoryService::class);
+        return $user;
+    }
 
-            $categorys = $categoryService->getAll(1);
+    private function createCategory(): Category
+    {
+        $category = new Category();
+        $title = $this->faker->word();
 
-            $this->assertEquals(0, count($categorys));
-        }
-    */
+        $category->setTitle($title);
+
+        return $category;
+    }
 }

@@ -20,6 +20,8 @@
             <dd>{{  bug.description }}</dd>
             <dt>{{ 'label_category'|trans }}</dt>
             <dd>{{  bug.category.title }}</dd>
+            <dt>{{ 'label_author'|trans }}</dt>
+            <dd>{{  bug.author.email }}</dd>
         </dl>
         <button type="button" class="btn btn-primary">
             <a class="text-light" href="{{ url('bug_edit', {'bugId': bug.id}) }}" title="{{ 'action_update'|trans }}">

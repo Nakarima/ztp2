@@ -23,6 +23,7 @@
                 <th>{{ knp_pagination_sortable(pagination, 'label_created_at'|trans, 'category.createdAt') }}</th>
                 <th>{{ knp_pagination_sortable(pagination, 'label_updated_at'|trans, 'category.updatedAt') }}</th>
                 <th>{{ knp_pagination_sortable(pagination, 'label_title'|trans, 'category.title') }}</th>
+                <th>{{ 'label_author'|trans }}</th>
                 <th>{{ 'label_actions'|trans }}</th>
             </tr>
             </thead>
@@ -33,6 +34,7 @@
                     <td>{{ category.createdAt|format_date('long') }}</td>
                     <td>{{ category.createdAt|format_date('long') }}</td>
                     <td>{{ category.title }}</td>
+                    <td>{{ category.author.email }}</td>
                     <td>
                         <a href="{{ url('category_show', {categoryId: category.id}) }}" title="{{ 'action_view'|trans }}">
                             {{ 'action_view'|trans }}

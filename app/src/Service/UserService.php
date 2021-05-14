@@ -1,26 +1,24 @@
 <?php
 /**
- * Bug service.
+ * User service.
  */
 
 namespace App\Service;
 
-use App\Entity\Bug;
 use App\Entity\User;
-use App\Repository\BugRepository;
-use DateTime;
+use App\Repository\UserRepository;
 use Knp\Component\Pager\Pagination\PaginationInterface;
 use Knp\Component\Pager\PaginatorInterface;
 
 /**
- * Class BugService.
+ * Class UserService.
  */
-class BugService
+class UserService
 {
     /**
-     * @var BugRepository
+     * @var UserRepository
      */
-    private $bugRepository;
+    private $userRepository;
 
     /**
      * @var PaginatorInterface
@@ -28,19 +26,19 @@ class BugService
     private $paginator;
 
     /**
-     * BugController constructor.
+     * UserController constructor.
      *
-     * @param BugRepository      $bugRepository
+     * @param UserRepository     $userRepository
      * @param PaginatorInterface $paginator
      */
-    public function __construct(BugRepository $bugRepository, PaginatorInterface $paginator)
+    public function __construct(UserRepository $userRepository, PaginatorInterface $paginator)
     {
-        $this->bugRepository = $bugRepository;
+        $this->userRepository = $userRepository;
         $this->paginator = $paginator;
     }
 
     /**
-     * Returns all bugs.
+     * Returns all categories.
      * @param int $page
      *
      * @return PaginationInterface
@@ -48,61 +46,60 @@ class BugService
     public function getAll(int $page): PaginationInterface
     {
         return $this->paginator->paginate(
-            $this->bugRepository->queryAll(),
+            $this->userRepository->queryAll(),
             $page,
-            BugRepository::PAGINATOR_ITEMS_PER_PAGE
+            UserRepository::PAGINATOR_ITEMS_PER_PAGE
         );
     }
 
     /**
-     * Returns one bug.
+     * Returns one user.
+     *
      * @param int $id
      *
-     * @return Bug|null
+     * @return User|null
      */
-    public function getById(int $id): ?Bug
+    public function getById(int $id): ?User
     {
-        return $this->bugRepository->find($id);
+        return $this->userRepository->find($id);
     }
 
     /**
-     * Creates bug.
+     * Creates user.
      *
-     * @param Bug  $bug
      * @param User $user
      *
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function createBug(Bug $bug, User $user)
+    public function createUser(User $user)
     {
-        $bug->setAuthor($user);
-        $this->bugRepository->save($bug);
+        $this->userRepository->save($user);
     }
 
     /**
-     * Updates bug.
+     * Updates user.
      *
-     * @param Bug $bug
+     * @param User $user
      *
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function updateBug(Bug $bug)
+    public function updateUser(User $user)
     {
-        $this->bugRepository->save($bug);
+        $this->userRepository->save($user);
     }
 
     /**
-     * Deletes bug.
+     * Deletes user.
      *
-     * @param Bug $bug
+     * @param User $user
      *
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function deleteBug(Bug $bug)
+    public function deleteUser(User $user)
     {
-        $this->bugRepository->delete($bug);
+        $this->userRepository->delete($user);
     }
 }

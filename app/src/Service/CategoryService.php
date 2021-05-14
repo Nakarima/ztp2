@@ -6,6 +6,7 @@
 namespace App\Service;
 
 use App\Entity\Category;
+use App\Entity\User;
 use App\Repository\CategoryRepository;
 use DateTime;
 use Knp\Component\Pager\Pagination\PaginationInterface;
@@ -68,14 +69,14 @@ class CategoryService
      * Creates category.
      *
      * @param Category $category
+     * @param User     $user
      *
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function createCategory(Category $category)
+    public function createCategory(Category $category, User $user)
     {
-        $category->setCreatedAt(new DateTime());
-        $category->setUpdatedAt(new DateTime());
+        $category->setAuthor($user);
         $this->categoryRepository->save($category);
     }
 
@@ -89,7 +90,6 @@ class CategoryService
      */
     public function updateCategory(Category $category)
     {
-        $category->setUpdatedAt(new DateTime());
         $this->categoryRepository->save($category);
     }
 

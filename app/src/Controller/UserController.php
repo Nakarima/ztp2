@@ -1,13 +1,13 @@
 <?php
 /**
- * Bug controller.
+ * User controller.
  */
 
 namespace App\Controller;
 
-use App\Entity\Bug;
-use App\Form\BugType;
-use App\Service\BugService;
+use App\Entity\User;
+use App\Form\UserType;
+use App\Service\UserService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,24 +15,25 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * Class BugController.
+ * Class UserController.
  *
- * @Route("/bug")
+ * @Route("/user")
  */
-class BugController extends AbstractController
+class UserController extends AbstractController
 {
     /**
-     * @var BugService
+     * @var UserService
      */
-    private $bugService;
+    private $userService;
 
     /**
-     * BugController constructor.
-     * @param BugService $bugService
+     * UserController constructor.
+     *
+     * @param UserService $userService
      */
-    public function __construct(BugService $bugService)
+    public function __construct(UserService $userService)
     {
-        $this->bugService = $bugService;
+        $this->userService = $userService;
     }
 
     /**
@@ -45,16 +46,16 @@ class BugController extends AbstractController
      * @Route(
      *     "/",
      *     methods={"GET"},
-     *     name="bug_index",
+     *     name="user_index",
      * )
      */
     public function index(Request $request): Response
     {
         $page = $request->query->getInt('page', 1);
-        $pagination = $this->bugService->getAll($page);
+        $pagination = $this->userService->getAll($page);
 
         return $this->render(
-            'bug/index.html.twig',
+            'user/index.html.twig',
             ['pagination' => $pagination]
         );
     }
@@ -62,24 +63,24 @@ class BugController extends AbstractController
     /**
      * Show action.
      *
-     * @param int $bugId Bug id
+     * @param int $userId User id
      *
      * @return \Symfony\Component\HttpFoundation\Response HTTP response
      *
      * @Route(
-     *     "/{bugId}",
+     *     "/{userId}",
      *     methods={"GET"},
-     *     name="bug_show",
-     *     requirements={"bugId": "[1-9]\d*"},
+     *     name="user_show",
+     *     requirements={"userId": "[1-9]\d*"},
      * )
      */
-    public function show(int $bugId): Response
+    public function show(int $userId): Response
     {
-        $bug = $this->bugService->getById($bugId);
+        $user = $this->userService->getById($userId);
 
         return $this->render(
-            'bug/show.html.twig',
-            ['bug' => $bug]
+            'user/show.html.twig',
+            ['user' => $user]
         );
     }
 
@@ -96,24 +97,24 @@ class BugController extends AbstractController
      * @Route(
      *     "/create",
      *     methods={"GET", "POST"},
-     *     name="bug_create",
+     *     name="user_create",
      * )
      */
     public function create(Request $request): Response
     {
-        $bug = new Bug();
-        $form = $this->createForm(BugType::class, $bug);
+        $user = new User();
+        $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->bugService->createBug($bug, $this->getUser());
+            $this->userService->createUser($user);
             $this->addFlash('success', 'message_created_successfully');
 
-            return $this->redirectToRoute('bug_index');
+            return $this->redirectToRoute('user_index');
         }
 
         return $this->render(
-            'bug/create.html.twig',
+            'user/create.html.twig',
             ['form' => $form->createView()]
         );
     }
@@ -122,7 +123,7 @@ class BugController extends AbstractController
      * Edit action.
      *
      * @param \Symfony\Component\HttpFoundation\Request $request HTTP request
-     * @param int                                       $bugId   Bug id
+     * @param int                                       $userId  User id
      *
      * @return \Symfony\Component\HttpFoundation\Response HTTP response
      *
@@ -130,31 +131,31 @@ class BugController extends AbstractController
      * @throws \Doctrine\ORM\OptimisticLockException
      *
      * @Route(
-     *     "/{bugId}/edit",
+     *     "/{userId}/edit",
      *     methods={"GET", "PUT"},
-     *     requirements={"bugId": "[1-9]\d*"},
-     *     name="bug_edit",
+     *     requirements={"userId": "[1-9]\d*"},
+     *     name="user_edit",
      * )
      */
-    public function edit(Request $request, int $bugId): Response
+    public function edit(Request $request, int $userId): Response
     {
-        $bug = $this->bugService->getById($bugId);
-        $form = $this->createForm(BugType::class, $bug, ['method' => 'PUT']);
+        $user = $this->userService->getById($userId);
+        $form = $this->createForm(UserType::class, $user, ['method' => 'PUT']);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->bugService->updateBug($bug);
+            $this->userService->updateUser($user);
 
             $this->addFlash('success', 'message_updated_successfully');
 
-            return $this->redirectToRoute('bug_index');
+            return $this->redirectToRoute('user_index');
         }
 
         return $this->render(
-            'bug/edit.html.twig',
+            'user/edit.html.twig',
             [
                 'form' => $form->createView(),
-                'bug' => $bug,
+                'user' => $user,
             ]
         );
     }
@@ -163,7 +164,7 @@ class BugController extends AbstractController
      * Delete action.
      *
      * @param \Symfony\Component\HttpFoundation\Request $request HTTP request
-     * @param int                                       $bugId   Bug id
+     * @param int                                       $userId  User id
      *
      * @return \Symfony\Component\HttpFoundation\Response HTTP response
      *
@@ -171,16 +172,23 @@ class BugController extends AbstractController
      * @throws \Doctrine\ORM\OptimisticLockException
      *
      * @Route(
-     *     "/{bugId}/delete",
+     *     "/{userId}/delete",
      *     methods={"GET", "DELETE"},
-     *     requirements={"bugId": "[1-9]\d*"},
-     *     name="bug_delete",
+     *     requirements={"userId": "[1-9]\d*"},
+     *     name="user_delete",
      * )
      */
-    public function delete(Request $request, int $bugId): Response
+    public function delete(Request $request, int $userId): Response
     {
-        $bug = $this->bugService->getById($bugId);
-        $form = $this->createForm(FormType::class, $bug, ['method' => 'DELETE']);
+        $user = $this->userService->getById($userId);
+
+        if ($user->getBugs()->count()) {
+            $this->addFlash('warning', 'message_user_contains_tasks');
+
+            return $this->redirectToRoute('user_index');
+        }
+
+        $form = $this->createForm(FormType::class, $user, ['method' => 'DELETE']);
         $form->handleRequest($request);
 
         if ($request->isMethod('DELETE') && !$form->isSubmitted()) {
@@ -188,17 +196,17 @@ class BugController extends AbstractController
         }
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->bugService->deleteBug($bug);
+            $this->userService->deleteUser($user);
             $this->addFlash('success', 'message.deleted_successfully');
 
-            return $this->redirectToRoute('bug_index');
+            return $this->redirectToRoute('user_index');
         }
 
         return $this->render(
-            'bug/delete.html.twig',
+            'user/delete.html.twig',
             [
                 'form' => $form->createView(),
-                'bug' => $bug,
+                'user' => $user,
             ]
         );
     }

@@ -16,6 +16,8 @@
             <dd>{{ category.createdAt|format_date('long') }}</dd>
             <dt>{{ 'label_title'|trans }}</dt>
             <dd>{{ category.title }}</dd>
+            <dt>{{ 'label_author'|trans }}</dt>
+            <dd>{{  category.author.email }}</dd>
         </dl>
         <button type="button" class="btn btn-primary">
             <a class="text-light" href="{{ url('category_edit', {'categoryId': category.id}) }}"

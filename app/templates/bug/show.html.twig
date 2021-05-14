@@ -21,6 +21,14 @@
             <dt>{{ 'label_category'|trans }}</dt>
             <dd>{{  bug.category.title }}</dd>
         </dl>
+        <button type="button" class="btn btn-primary">
+            <a class="text-light" href="{{ url('bug_edit', {'bugId': bug.id}) }}" title="{{ 'action_update'|trans }}">
+                {{ 'action_update'|trans }} </a>
+        </button>
+        <button type="button" class="btn btn-primary">
+            <a class="text-light" href="{{ url('bug_delete', {'bugId': bug.id}) }}" title="{{ 'action_delete'|trans }}">
+                {{ 'action_delete'|trans }} </a>
+        </button>
         <p>
             <a href="{{ url('bug_index') }}" title="{{ 'action_back_to_list'|trans }}">
                 {{ 'action_back_to_list'|trans }}

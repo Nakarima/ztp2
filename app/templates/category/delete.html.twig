@@ -3,7 +3,7 @@
     page_title_param: {'%id%': category.id},
     attr: {
         method: 'DELETE',
-        action: url('category_delete', {'id': category.id}),
+        action: url('category_delete', {'categoryId': category.id}),
     },
     form: form,
     submit_label: 'action_delete'|trans,

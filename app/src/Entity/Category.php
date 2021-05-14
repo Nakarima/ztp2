@@ -9,6 +9,8 @@ use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Class Category.
@@ -34,6 +36,12 @@ class Category
      *
      * @var string
      *
+     * @Assert\Type(type="string")
+     * @Assert\NotBlank
+     * @Assert\Length(
+     *     min="3",
+     *     max="64",
+     * )
      * @ORM\Column(type="string", length=64)
      */
     private $title;
@@ -44,6 +52,10 @@ class Category
      * @var DateTimeInterface
      *
      * @ORM\Column(type="datetime")
+     *
+     * @Assert\Type(type="\DateTimeInterface")
+     *
+     * @Gedmo\Timestampable(on="update")
      */
     private $updatedAt;
 
@@ -53,6 +65,10 @@ class Category
      * @var DateTimeInterface
      *
      * @ORM\Column(type="datetime")
+     *
+     * @Assert\Type(type="\DateTimeInterface")
+     *
+     * @Gedmo\Timestampable(on="create")
      */
     private $createdAt;
 
@@ -60,6 +76,25 @@ class Category
      * @ORM\OneToMany(targetEntity=Bug::class, mappedBy="category")
      */
     private $bugs;
+
+    /**
+     * Code.
+     *
+     * @var string
+     *
+     * @Assert\Type(type="string")
+     * @Assert\Length(
+     *     min="3",
+     *     max="64",
+     * )
+     * @ORM\Column(
+     *     type="string",
+     *     length=64
+     * )
+     *
+     * @Gedmo\Slug(fields={"title"})
+     */
+    private $code;
 
     public function __construct()
     {
@@ -164,5 +199,25 @@ class Category
         }
 
         return $this;
+    }
+
+    /**
+     * Getter for code.
+     *
+     * @return string|null
+     */
+    public function getCode(): ?string
+    {
+        return $this->code;
+    }
+
+    /**
+     * Setter for code.
+     *
+     * @param string $code
+     */
+    public function setCode(string $code): void
+    {
+        $this->code = $code;
     }
 }

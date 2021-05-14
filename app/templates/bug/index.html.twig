@@ -6,6 +6,10 @@
 
 {% block body %}
     <h1>{{ 'title_bug_list'|trans }}</h1>
+    <button type="button" class="btn btn-primary">
+        <a class="text-light" href="{{ url('bug_create') }}" title="{{ 'action_create'|trans }}">
+            {{ 'action_create'|trans }} </a>
+    </button>
     {% if pagination is defined and pagination.items|length %}
 
         <div class="navigation text-center">
@@ -32,7 +36,7 @@
                     <td>{{ bug.title }}</td>
                     <td>{{ bug.category.title }}</td>
                     <td>
-                        <a href="{{ url('bug_show', {id: bug.id}) }}" title="{{ 'action_view'|trans }}">
+                        <a href="{{ url('bug_show', {bugId: bug.id}) }}" title="{{ 'action_view'|trans }}">
                             {{ 'action_view'|trans }}
                         </a>
                     </td>

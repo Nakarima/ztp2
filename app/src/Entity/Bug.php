@@ -7,6 +7,8 @@ namespace App\Entity;
 
 use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Class Bug.
@@ -32,6 +34,11 @@ class Bug
      *
      * @var string
      *
+     * @Assert\Type(type="string")
+     * @Assert\Length(
+     *     min="3",
+     *     max="64",
+     * )
      * @ORM\Column(type="string", length=64)
      */
     private $title;
@@ -41,6 +48,11 @@ class Bug
      *
      * @var string
      *
+     * @Assert\Type(type="string")
+     * @Assert\Length(
+     *     min="3",
+     *     max="255",
+     * )
      * @ORM\Column(type="string", length=255)
      */
     private $description;
@@ -50,7 +62,11 @@ class Bug
      *
      * @var DateTimeInterface
      *
+     * @Assert\Type(type="\DateTimeInterface")
+     *
      * @ORM\Column(type="datetime")
+     *
+     * @Gedmo\Timestampable(on="update")
      */
     private $updatedAt;
 
@@ -59,7 +75,11 @@ class Bug
      *
      * @var DateTimeInterface
      *
+     * @Assert\Type(type="\DateTimeInterface")
+     *
      * @ORM\Column(type="datetime")
+     *
+     * @Gedmo\Timestampable(on="create")
      */
     private $createdAt;
 

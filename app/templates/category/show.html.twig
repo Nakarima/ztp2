@@ -15,16 +15,20 @@
             <dt>{{ 'label_updated_at'|trans }}</dt>
             <dd>{{ category.createdAt|format_date('long') }}</dd>
             <dt>{{ 'label_title'|trans }}</dt>
-            <dd>{{  category.title }}</dd>
+            <dd>{{ category.title }}</dd>
         </dl>
         <button type="button" class="btn btn-primary">
-            <a class="text-light" href="{{ url('category_edit', {'id': category.id}) }}" title="{{ 'action_update'|trans }}">
+            <a class="text-light" href="{{ url('category_edit', {'categoryId': category.id}) }}"
+               title="{{ 'action_update'|trans }}">
                 {{ 'action_update'|trans }} </a>
         </button>
-        <button type="button" class="btn btn-primary">
-            <a class="text-light" href="{{ url('category_delete', {'id': category.id}) }}" title="{{ 'action_delete'|trans }}">
-                {{ 'action_delete'|trans }} </a>
-        </button>
+        {% if not category.bugs|length %}
+            <button type="button" class="btn btn-primary">
+                <a class="text-light" href="{{ url('category_delete', {'categoryId': category.id}) }}"
+                   title="{{ 'action_delete'|trans }}">
+                    {{ 'action_delete'|trans }} </a>
+            </button>
+        {% endif %}
         <p>
             <a href="{{ url('category_index') }}" title="{{ 'action_back_to_list'|trans }}">
                 {{ 'action_back_to_list'|trans }}

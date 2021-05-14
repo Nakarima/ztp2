@@ -5,10 +5,13 @@ namespace App\Tests;
 use App\Entity\Category;
 use App\Repository\CategoryRepository;
 use App\Service\CategoryService;
-use DateTime;
 use Faker\Factory;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
+/**
+ * Class CategoryServiceTest
+ * @package App\Tests
+ */
 class CategoryServiceTest extends KernelTestCase
 {
     /**
@@ -18,7 +21,7 @@ class CategoryServiceTest extends KernelTestCase
      */
     protected $faker;
 
-    /*public function testGetAllEmpty()
+    public function testGetAllEmpty()
     {
         self::bootKernel();
         $container = self::$container;
@@ -27,7 +30,7 @@ class CategoryServiceTest extends KernelTestCase
         $categories = $categoryService->getAll(1);
 
         $this->assertEquals(0, count($categories));
-    }*/
+    }
 
     public function testGetByIdNotFound()
     {
@@ -111,31 +114,34 @@ class CategoryServiceTest extends KernelTestCase
         $categoryService = $container->get(CategoryService::class);
 
         // create second page
-        array_map(function() use ($categoryService) {
+        array_map(function () use ($categoryService) {
             $category = new Category();
             $title = $this->faker->word();
             $category->setTitle($title);
             $categoryService->createCategory($category);
+
             return $category;
         }, range(1, CategoryRepository::PAGINATOR_ITEMS_PER_PAGE));
 
         sleep(1);
 
-        $created = array_map(function() use ($categoryService) {
+        $created = array_map(function () use ($categoryService) {
             $category = new Category();
             $title = $this->faker->word();
             $category->setTitle($title);
             $categoryService->createCategory($category);
             sleep(1); // hack motzno, w scali można zrobić tick time na threadzie
+
             return $category->getId();
         }, range(1, CategoryRepository::PAGINATOR_ITEMS_PER_PAGE));
 
-        $firstPage = array_map(function($category) {
+        $firstPage = array_map(function ($category) {
             return $category->getId();
         }, $categoryService->getAll(1)->getItems());
 
         $this->assertEquals(array_reverse($created), $firstPage);
     }
+
     /*
 
         public function testGetAll()

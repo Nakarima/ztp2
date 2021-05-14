@@ -28,6 +28,7 @@ class CategoryController extends AbstractController
 
     /**
      * CategoryController constructor.
+     * @param CategoryService $categoryService
      */
     public function __construct(CategoryService $categoryService)
     {
@@ -37,7 +38,7 @@ class CategoryController extends AbstractController
     /**
      * Index action.
      *
-     * @param Request $request
+     * @param Request $request HTTP request
      *
      * @return \Symfony\Component\HttpFoundation\Response HTTP response
      *
@@ -61,19 +62,21 @@ class CategoryController extends AbstractController
     /**
      * Show action.
      *
-     * @param \App\Entity\Category $category Category entity
+     * @param int $categoryId Category id
      *
      * @return \Symfony\Component\HttpFoundation\Response HTTP response
      *
      * @Route(
-     *     "/{id}",
+     *     "/{categoryId}",
      *     methods={"GET"},
      *     name="category_show",
-     *     requirements={"id": "[1-9]\d*"},
+     *     requirements={"categoryId": "[1-9]\d*"},
      * )
      */
-    public function show(Category $category): Response
+    public function show(int $categoryId): Response
     {
+        $category = $this->categoryService->getById($categoryId);
+
         return $this->render(
             'category/show.html.twig',
             ['category' => $category]
@@ -83,7 +86,7 @@ class CategoryController extends AbstractController
     /**
      * Create action.
      *
-     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param Request $request HTTP request
      *
      * @return \Symfony\Component\HttpFoundation\Response HTTP response
      *
@@ -118,8 +121,8 @@ class CategoryController extends AbstractController
     /**
      * Edit action.
      *
-     * @param \Symfony\Component\HttpFoundation\Request $request HTTP request
-     * @param \App\Entity\Category $category Category entity
+     * @param \Symfony\Component\HttpFoundation\Request $request    HTTP request
+     * @param int                                       $categoryId Category id
      *
      * @return \Symfony\Component\HttpFoundation\Response HTTP response
      *
@@ -127,19 +130,19 @@ class CategoryController extends AbstractController
      * @throws \Doctrine\ORM\OptimisticLockException
      *
      * @Route(
-     *     "/{id}/edit",
+     *     "/{categoryId}/edit",
      *     methods={"GET", "PUT"},
-     *     requirements={"id": "[1-9]\d*"},
+     *     requirements={"categoryId": "[1-9]\d*"},
      *     name="category_edit",
      * )
      */
-    public function edit(Request $request, Category $category): Response
+    public function edit(Request $request, int $categoryId): Response
     {
+        $category = $this->categoryService->getById($categoryId);
         $form = $this->createForm(CategoryType::class, $category, ['method' => 'PUT']);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $category->setUpdatedAt(new \DateTime());
             $this->categoryService->updateCategory($category);
 
             $this->addFlash('success', 'message_updated_successfully');
@@ -159,8 +162,8 @@ class CategoryController extends AbstractController
     /**
      * Delete action.
      *
-     * @param \Symfony\Component\HttpFoundation\Request $request HTTP request
-     * @param \App\Entity\Category $category Category entity
+     * @param \Symfony\Component\HttpFoundation\Request $request    HTTP request
+     * @param int                                       $categoryId Category id
      *
      * @return \Symfony\Component\HttpFoundation\Response HTTP response
      *
@@ -168,14 +171,22 @@ class CategoryController extends AbstractController
      * @throws \Doctrine\ORM\OptimisticLockException
      *
      * @Route(
-     *     "/{id}/delete",
+     *     "/{categoryId}/delete",
      *     methods={"GET", "DELETE"},
-     *     requirements={"id": "[1-9]\d*"},
+     *     requirements={"categoryId": "[1-9]\d*"},
      *     name="category_delete",
      * )
      */
-    public function delete(Request $request, Category $category): Response
+    public function delete(Request $request, int $categoryId): Response
     {
+        $category = $this->categoryService->getById($categoryId);
+
+        if ($category->getBugs()->count()) {
+            $this->addFlash('warning', 'message_category_contains_tasks');
+
+            return $this->redirectToRoute('category_index');
+        }
+
         $form = $this->createForm(FormType::class, $category, ['method' => 'DELETE']);
         $form->handleRequest($request);
 

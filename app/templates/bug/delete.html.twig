@@ -1,0 +1,11 @@
+{% include 'default/_form.html.twig' with {
+    page_title: 'title_bug_delete',
+    page_title_param: {'%id%': bug.id},
+    attr: {
+        method: 'DELETE',
+        action: url('bug_delete', {'bugId': bug.id}),
+    },
+    form: form,
+    submit_label: 'action_delete'|trans,
+    back_to_list_path: 'bug_index',
+} %}

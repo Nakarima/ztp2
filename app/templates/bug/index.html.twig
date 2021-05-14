@@ -25,7 +25,7 @@
                 <th>{{ knp_pagination_sortable(pagination, 'label_created_at'|trans, 'bug.createdAt') }}</th>
                 <th>{{ knp_pagination_sortable(pagination, 'label_updated_at'|trans, 'bug.updatedAt') }}</th>
                 <th>{{ knp_pagination_sortable(pagination, 'label_title'|trans, 'bug.title') }}</th>
-                <th>{{ 'label_category'|trans }}</th>
+                <th>{{ knp_pagination_sortable(pagination, 'label_category'|trans, 'category.title') }}</th>
                 <th>{{ 'label_author'|trans }}</th>
                 <th>{{ 'label_actions'|trans }}</th>
             </tr>

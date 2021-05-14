@@ -84,13 +84,13 @@ class Bug
     private $createdAt;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Category::class, inversedBy="bugs")
+     * @ORM\ManyToOne(targetEntity=Category::class, inversedBy="bugs", fetch="EXTRA_LAZY",)
      * @ORM\JoinColumn(nullable=false)
      */
     private $category;
 
     /**
-     * @ORM\ManyToOne(targetEntity=User::class)
+     * @ORM\ManyToOne(targetEntity=User::class, fetch="EXTRA_LAZY",)
      * @ORM\JoinColumn(nullable=false)
      */
     private $author;

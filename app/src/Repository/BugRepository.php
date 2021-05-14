@@ -42,6 +42,13 @@ class BugRepository extends ServiceEntityRepository
     public function queryAll(): QueryBuilder
     {
         return $this->getOrCreateQueryBuilder()
+            ->select(
+                'partial bug.{id, createdAt, updatedAt, title}',
+                'partial category.{id, title}',
+                'partial user.{id, email}'
+            )
+            ->join('bug.category', 'category')
+            ->join('bug.author', 'user')
             ->orderBy('bug.updatedAt', 'DESC');
     }
 

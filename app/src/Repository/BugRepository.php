@@ -6,6 +6,8 @@
 namespace App\Repository;
 
 use App\Entity\Bug;
+use App\Entity\Category;
+use App\Entity\Tag;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
@@ -18,6 +20,11 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class BugRepository extends ServiceEntityRepository
 {
+    /**
+     * BugRepository constructor.
+     *
+     * @param ManagerRegistry $registry
+     */
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Bug::class);
@@ -26,11 +33,13 @@ class BugRepository extends ServiceEntityRepository
     /**
      * Query all records.
      *
+     * @param array $filters
+     *
      * @return QueryBuilder Query builder
      */
-    public function queryAll(): QueryBuilder
+    public function queryAll(array $filters = []): QueryBuilder
     {
-        return $this->getOrCreateQueryBuilder()
+        $queryBuilder = $this->getOrCreateQueryBuilder()
             ->select(
                 'partial bug.{id, createdAt, updatedAt, title}',
                 'partial category.{id, title}',
@@ -43,6 +52,10 @@ class BugRepository extends ServiceEntityRepository
             ->join('bug.status', 'status')
             ->leftJoin('bug.tags', 'tags')
             ->orderBy('bug.updatedAt', 'DESC');
+
+        $queryBuilder = $this->applyFiltersToList($queryBuilder, $filters);
+
+        return $queryBuilder;
     }
 
     /**
@@ -83,6 +96,29 @@ class BugRepository extends ServiceEntityRepository
     private function getOrCreateQueryBuilder(QueryBuilder $queryBuilder = null): QueryBuilder
     {
         return $queryBuilder ?? $this->createQueryBuilder('bug');
+    }
+
+    /**
+     * Apply filters to paginated list.
+     *
+     * @param \Doctrine\ORM\QueryBuilder $queryBuilder Query builder
+     * @param array                      $filters      Filters array
+     *
+     * @return \Doctrine\ORM\QueryBuilder Query builder
+     */
+    private function applyFiltersToList(QueryBuilder $queryBuilder, array $filters = []): QueryBuilder
+    {
+        if (isset($filters['category']) && $filters['category'] instanceof Category) {
+            $queryBuilder->andWhere('category = :category')
+                ->setParameter('category', $filters['category']);
+        }
+
+        if (isset($filters['tag']) && $filters['tag'] instanceof Tag) {
+            $queryBuilder->andWhere('tags IN (:tag)')
+                ->setParameter('tag', $filters['tag']);
+        }
+
+        return $queryBuilder;
     }
 
     // /**

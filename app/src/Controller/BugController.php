@@ -51,8 +51,12 @@ class BugController extends AbstractController
      */
     public function index(Request $request): Response
     {
+        $filters = [];
+        $filters['category_id'] = $request->query->getInt('filters_category_id');
+        $filters['tag_id'] = $request->query->getInt('filters_tag_id');
+
         $page = $request->query->getInt('page', 1);
-        $pagination = $this->bugService->getAll($page);
+        $pagination = $this->bugService->getList($page, $filters);
 
         return $this->render(
             'bug/index.html.twig',

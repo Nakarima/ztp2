@@ -34,32 +34,49 @@ class BugService
     private $bugRepository;
 
     /**
-     * @var PaginatorInterface
+     * Category service.
+     *
+     * @var \App\Service\CategoryService
      */
-    private $paginator;
+    private $categoryService;
 
     /**
-     * BugController constructor.
+     * Tag service.
      *
-     * @param BugRepository      $bugRepository
-     * @param PaginatorInterface $paginator
+     * @var \App\Service\TagService
      */
-    public function __construct(BugRepository $bugRepository, PaginatorInterface $paginator)
+    private $tagService;
+
+    /**
+     * TaskService constructor.
+     *
+     * @param \App\Repository\BugRepository           $bugRepository   Bug repository
+     * @param \Knp\Component\Pager\PaginatorInterface $paginator       Paginator
+     * @param \App\Service\CategoryService            $categoryService Category service
+     * @param \App\Service\TagService                 $tagService      Tag service
+     */
+    public function __construct(BugRepository $bugRepository, PaginatorInterface $paginator, CategoryService $categoryService, TagService $tagService)
     {
         $this->bugRepository = $bugRepository;
         $this->paginator = $paginator;
+        $this->categoryService = $categoryService;
+        $this->tagService = $tagService;
     }
 
     /**
      * Returns all bugs.
-     * @param int $page
+     *
+     * @param int   $page
+     * @param array $filters
      *
      * @return PaginationInterface
      */
-    public function getAll(int $page): PaginationInterface
+    public function getList(int $page, array $filters = []): PaginationInterface
     {
+        $filters = $this->prepareFilters($filters);
+
         return $this->paginator->paginate(
-            $this->bugRepository->queryAll(),
+            $this->bugRepository->queryAll($filters),
             $page,
             BugService::PAGINATOR_ITEMS_PER_PAGE
         );
@@ -115,5 +132,34 @@ class BugService
     public function deleteBug(Bug $bug)
     {
         $this->bugRepository->delete($bug);
+    }
+
+    /**
+     * Prepare filters for the tasks list.
+     *
+     * @param array $filters Raw filters from request
+     *
+     * @return array Result array of filters
+     */
+    private function prepareFilters(array $filters): array
+    {
+        $resultFilters = [];
+        if (isset($filters['category_id']) && is_numeric($filters['category_id'])) {
+            $category = $this->categoryService->getById(
+                $filters['category_id']
+            );
+            if (null !== $category) {
+                $resultFilters['category'] = $category;
+            }
+        }
+
+        if (isset($filters['tag_id']) && is_numeric($filters['tag_id'])) {
+            $tag = $this->tagService->getById($filters['tag_id']);
+            if (null !== $tag) {
+                $resultFilters['tag'] = $tag;
+            }
+        }
+
+        return $resultFilters;
     }
 }

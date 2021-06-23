@@ -39,7 +39,11 @@
                     <td>{{ bug.createdAt|format_date('long') }}</td>
                     <td>{{ bug.createdAt|format_date('long') }}</td>
                     <td>{{ bug.title }}</td>
-                    <td>{{ bug.category.title }}</td>
+                    <td>
+                        <a href="{{ url('bug_index', {'filters.category_id' : bug.category.id}) }}" title="{{ bug.category.title }}">
+                            {{ bug.category.title }}
+                        </a>
+                    </td>
                     <td>
                         {% if bug.tags is defined and bug.tags|length %}
                             {% for tag in bug.tags %}

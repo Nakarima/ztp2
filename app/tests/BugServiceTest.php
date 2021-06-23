@@ -34,7 +34,7 @@ class BugServiceTest extends KernelTestCase
         $container = self::$container;
         $bugService = $container->get(BugService::class);
 
-        $categories = $bugService->getAll(1);
+        $categories = $bugService->getList(1, []);
 
         $this->assertEquals(0, count($categories));
     }
@@ -247,9 +247,84 @@ class BugServiceTest extends KernelTestCase
 
         $firstPage = array_map(function ($bug) {
             return $bug->getId();
-        }, $bugService->getAll(1)->getItems());
+        }, $bugService->getList(1, [])->getItems());
 
         $this->assertEquals(array_reverse($created), $firstPage);
+    }
+
+    public function testGetByCategory()
+    {
+        self::bootKernel();
+        $this->faker = Factory::create();
+        $container = self::$container;
+        $bugService = $container->get(BugService::class);
+        $user = $this->createUser($container);
+        $category = $this->createCategory($container, $user);
+        $category2 = $this->createCategory($container, $user);
+        $statuses = $this->createStatuses($container);
+
+        // create second page
+        array_map(function () use ($user, $category, $statuses, $bugService) {
+            $bug = $this->createBug($category, $statuses[0]);
+            $bugService->createBug($bug, $user);
+
+            return $bug;
+        }, range(1, BugService::PAGINATOR_ITEMS_PER_PAGE));
+
+        $created = array_map(function () use ($user, $category2, $statuses, $bugService) {
+            $bug = $this->createBug($category2, $statuses[0]);
+            $bugService->createBug($bug, $user);
+
+            return $bug->getId();
+        }, range(1, BugService::PAGINATOR_ITEMS_PER_PAGE));
+
+        $filters = [];
+        $filters['category_id'] = $category2->getId();
+
+        $firstPage = array_map(function ($bug) {
+            return $bug->getId();
+        }, $bugService->getList(1, $filters)->getItems());
+
+        $this->assertEqualsCanonicalizing($created, $firstPage);
+    }
+
+    public function testGetByTag()
+    {
+        self::bootKernel();
+        $this->faker = Factory::create();
+        $container = self::$container;
+        $bugService = $container->get(BugService::class);
+        $user = $this->createUser($container);
+        $category = $this->createCategory($container, $user);
+        $statuses = $this->createStatuses($container);
+        $tag = $this->createTag($container);
+        $tag2 = $this->createTag($container);
+
+        // create second page
+        array_map(function () use ($user, $category, $statuses, $bugService, $tag) {
+            $bug = $this->createBug($category, $statuses[0]);
+            $bug->addTag($tag);
+            $bugService->createBug($bug, $user);
+
+            return $bug;
+        }, range(1, BugService::PAGINATOR_ITEMS_PER_PAGE));
+
+        $created = array_map(function () use ($user, $category, $statuses, $bugService, $tag2) {
+            $bug = $this->createBug($category, $statuses[0]);
+            $bug->addTag($tag2);
+            $bugService->createBug($bug, $user);
+
+            return $bug->getId();
+        }, range(1, BugService::PAGINATOR_ITEMS_PER_PAGE));
+
+        $filters = [];
+        $filters['tag_id'] = $tag2->getId();
+
+        $firstPage = array_map(function ($bug) {
+            return $bug->getId();
+        }, $bugService->getList(1, $filters)->getItems());
+
+        $this->assertEqualsCanonicalizing($created, $firstPage);
     }
 
     private function createCategory($container, $user): Category

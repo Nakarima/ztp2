@@ -4,8 +4,10 @@ namespace App\Tests;
 
 use App\Entity\Bug;
 use App\Entity\Category;
+use App\Entity\Status;
 use App\Entity\User;
 use App\Repository\BugRepository;
+use App\Repository\StatusRepository;
 use App\Service\BugService;
 use App\Service\CategoryService;
 use App\Service\UserService;
@@ -55,8 +57,9 @@ class BugServiceTest extends KernelTestCase
         $bugService = $container->get(BugService::class);
         $user = $this->createUser($container);
         $category = $this->createCategory($container, $user);
+        $statuses = $this->createStatuses($container);
 
-        $bug = $this->createBug($category);
+        $bug = $this->createBug($category, $statuses[0]);
         $bugService->createBug($bug, $user);
         $id = $bug->getId();
 
@@ -73,8 +76,9 @@ class BugServiceTest extends KernelTestCase
         $bugService = $container->get(BugService::class);
         $user = $this->createUser($container);
         $category = $this->createCategory($container, $user);
+        $statuses = $this->createStatuses($container);
 
-        $bug = $this->createBug($category);
+        $bug = $this->createBug($category, $statuses[0]);
         $bugService->createBug($bug, $user);
         $id = $bug->getId();
         $createdBug = $bugService->getById($id);
@@ -95,8 +99,9 @@ class BugServiceTest extends KernelTestCase
         $bugService = $container->get(BugService::class);
         $user = $this->createUser($container);
         $category = $this->createCategory($container, $user);
+        $statuses = $this->createStatuses($container);
 
-        $bug = $this->createBug($category);
+        $bug = $this->createBug($category, $statuses[0]);
         $bugService->createBug($bug, $user);
         $id = $bug->getId();
         $createdBug = $bugService->getById($id);
@@ -117,14 +122,16 @@ class BugServiceTest extends KernelTestCase
         $bugService = $container->get(BugService::class);
         $user = $this->createUser($container);
         $category = $this->createCategory($container, $user);
+        $statuses = $this->createStatuses($container);
 
-        $bug = $this->createBug($category);
+        $bug = $this->createBug($category, $statuses[0]);
         $bugService->createBug($bug, $user);
         $id = $bug->getId();
         $createdBug = $bugService->getById($id);
 
         $newCategory = $this->createCategory($container, $user);
         $createdBug->setCategory($newCategory);
+        $createdBug->setStatus($statuses[1]);
         $bugService->updateBug($createdBug);
         $updatedBug = $bugService->getById($id);
 
@@ -140,8 +147,9 @@ class BugServiceTest extends KernelTestCase
 
         $user = $this->createUser($container);
         $category = $this->createCategory($container, $user);
+        $statuses = $this->createStatuses($container);
 
-        $bug = $this->createBug($category);
+        $bug = $this->createBug($category, $statuses[0]);
         $bugService->createBug($bug, $user);
         $id = $bug->getId();
         $createdBug = $bugService->getById($id);
@@ -160,24 +168,25 @@ class BugServiceTest extends KernelTestCase
         $bugService = $container->get(BugService::class);
         $user = $this->createUser($container);
         $category = $this->createCategory($container, $user);
+        $statuses = $this->createStatuses($container);
 
         // create second page
-        array_map(function () use ($user, $category, $bugService) {
-            $bug = $this->createBug($category);
+        array_map(function () use ($user, $category, $statuses, $bugService) {
+            $bug = $this->createBug($category, $statuses[0]);
             $bugService->createBug($bug, $user);
 
             return $bug;
-        }, range(1, BugRepository::PAGINATOR_ITEMS_PER_PAGE));
+        }, range(1, BugService::PAGINATOR_ITEMS_PER_PAGE));
 
         sleep(1);
 
-        $created = array_map(function () use ($user, $category, $bugService) {
-            $bug = $this->createBug($category);
+        $created = array_map(function () use ($user, $category, $statuses, $bugService) {
+            $bug = $this->createBug($category, $statuses[0]);
             $bugService->createBug($bug, $user);
             sleep(1); // hack motzno, w scali można zrobić tick time na threadzie
 
             return $bug->getId();
-        }, range(1, BugRepository::PAGINATOR_ITEMS_PER_PAGE));
+        }, range(1, BugService::PAGINATOR_ITEMS_PER_PAGE));
 
         $firstPage = array_map(function ($bug) {
             return $bug->getId();
@@ -210,7 +219,20 @@ class BugServiceTest extends KernelTestCase
         return $user;
     }
 
-    private function createBug($category): Bug
+    private function createStatuses($container): array
+    {
+        $statusService = $container->get(StatusRepository::class);
+        $status1 = new Status();
+        $status1->setTitle("solved");
+        $statusService->save($status1);
+        $status2 = new Status();
+        $status2->setTitle("unsolved");
+        $statusService->save($status2);
+
+        return [$status1, $status2];
+    }
+
+    private function createBug($category, $status): Bug
     {
         $bug = new Bug();
         $title = $this->faker->word();
@@ -220,6 +242,7 @@ class BugServiceTest extends KernelTestCase
         $desc = $this->faker->sentence(10);
         $bug->setDescription($desc);
         $bug->setCategory($category);
+        $bug->setStatus($status);
 
         return $bug;
     }

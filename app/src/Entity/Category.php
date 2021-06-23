@@ -73,7 +73,7 @@ class Category
     private $createdAt;
 
     /**
-     * @ORM\OneToMany(targetEntity=Bug::class, mappedBy="category")
+     * @ORM\OneToMany(targetEntity="App\Entity\Bug", mappedBy="category")
      */
     private $bugs;
 

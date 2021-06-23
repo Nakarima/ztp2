@@ -18,17 +18,6 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class BugRepository extends ServiceEntityRepository
 {
-    /**
-     * Items per page.
-     *
-     * Use constants to define configuration options that rarely change instead
-     * of specifying them in app/config/config.yml.
-     * See https://symfony.com/doc/current/best_practices.html#configuration
-     *
-     * @constant int
-     */
-    const PAGINATOR_ITEMS_PER_PAGE = 5;
-
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Bug::class);
@@ -45,10 +34,12 @@ class BugRepository extends ServiceEntityRepository
             ->select(
                 'partial bug.{id, createdAt, updatedAt, title}',
                 'partial category.{id, title}',
-                'partial user.{id, email}'
+                'partial user.{id, email}',
+                'partial status.{id, title}'
             )
             ->join('bug.category', 'category')
             ->join('bug.author', 'user')
+            ->join('bug.status', 'status')
             ->orderBy('bug.updatedAt', 'DESC');
     }
 

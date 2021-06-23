@@ -45,6 +45,7 @@ class BugFixtures extends AbstractBaseFixtures implements DependentFixtureInterf
             $bug->setUpdatedAt($this->faker->dateTimeBetween('-100 days', '-1 days'));
             $bug->setCategory($this->getRandomReference('categories'));
             $bug->setAuthor($this->getRandomReference('users'));
+            $bug->setStatus($this->getRandomReference('statuses'));
 
             return $bug;
         });
@@ -60,6 +61,6 @@ class BugFixtures extends AbstractBaseFixtures implements DependentFixtureInterf
      */
     public function getDependencies(): array
     {
-        return [CategoryFixtures::class, UserFixtures::class];
+        return [CategoryFixtures::class, UserFixtures::class, StatusFixtures::class];
     }
 }

@@ -27,7 +27,7 @@ class CategoryRepository extends ServiceEntityRepository
      *
      * @constant int
      */
-    const PAGINATOR_ITEMS_PER_PAGE = 5;
+    const PAGINATOR_ITEMS_PER_PAGE = 10;
 
     /**
      * CategoryRepository constructor.
@@ -50,10 +50,8 @@ class CategoryRepository extends ServiceEntityRepository
             ->select(
                 'partial category.{id, createdAt, updatedAt, title}',
                 'partial user.{id, email}',
-                'partial bug.{id}'
             )
             ->join('category.author', 'user')
-            ->join('category.bugs', 'bug')
             ->orderBy('category.updatedAt', 'DESC');
     }
 

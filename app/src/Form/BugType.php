@@ -7,6 +7,7 @@ namespace App\Form;
 
 use App\Entity\Bug;
 use App\Entity\Category;
+use App\Entity\Status;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -56,6 +57,18 @@ class BugType extends AbstractType
                     return $category->getTitle();
                 },
                 'label' => 'label_category',
+                'placeholder' => 'label_none',
+                'required' => true,
+            ]
+        )->add(
+            'status',
+            EntityType::class,
+            [
+                'class' => Status::class,
+                'choice_label' => function ($category) {
+                    return $category->getTitle();
+                },
+                'label' => 'label_status',
                 'placeholder' => 'label_none',
                 'required' => true,
             ]

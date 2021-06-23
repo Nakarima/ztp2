@@ -8,7 +8,6 @@ namespace App\Service;
 use App\Entity\Category;
 use App\Entity\User;
 use App\Repository\CategoryRepository;
-use DateTime;
 use Knp\Component\Pager\Pagination\PaginationInterface;
 use Knp\Component\Pager\PaginatorInterface;
 
@@ -17,6 +16,17 @@ use Knp\Component\Pager\PaginatorInterface;
  */
 class CategoryService
 {
+    /**
+     * Items per page.
+     *
+     * Use constants to define configuration options that rarely change instead
+     * of specifying them in app/config/config.yml.
+     * See https://symfony.com/doc/current/best_practices.html#configuration
+     *
+     * @constant int
+     */
+    const PAGINATOR_ITEMS_PER_PAGE = 10;
+
     /**
      * @var CategoryRepository
      */
@@ -50,7 +60,7 @@ class CategoryService
         return $this->paginator->paginate(
             $this->categoryRepository->queryAll(),
             $page,
-            CategoryRepository::PAGINATOR_ITEMS_PER_PAGE
+            CategoryService::PAGINATOR_ITEMS_PER_PAGE
         );
     }
 

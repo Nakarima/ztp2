@@ -84,6 +84,40 @@ class CategoryServiceTest extends KernelTestCase
         $this->assertEquals($newTitle, $updatedCategory->getTitle());
     }
 
+    public function testGetMultiple()
+    {
+        self::bootKernel();
+        $this->faker = Factory::create();
+        $container = self::$container;
+        $categoryService = $container->get(CategoryService::class);
+        $user = $this->createUser($container);
+
+        // create second page
+        array_map(function () use ($user, $categoryService) {
+            $category = $this->createCategory();
+            $categoryService->createCategory($category, $user);
+
+            return $category;
+        }, range(1, CategoryService::PAGINATOR_ITEMS_PER_PAGE));
+
+        sleep(1);
+
+        $created = array_map(function ($i) use ($user, $categoryService) {
+            $category = $this->createCategory();
+            $categoryService->createCategory($category, $user);
+
+            sleep(1);
+
+            return $category->getId();
+        }, range(1, CategoryService::PAGINATOR_ITEMS_PER_PAGE));
+
+        $firstPage = array_map(function ($category) {
+            return $category->getId();
+        }, $categoryService->getAll(1)->getItems());
+
+        $this->assertEquals(array_reverse($created), $firstPage);
+    }
+
     public function testDelete()
     {
         self::bootKernel();
@@ -101,39 +135,6 @@ class CategoryServiceTest extends KernelTestCase
         $updatedCategory = $categoryService->getById($id);
 
         $this->assertEquals(null, $updatedCategory);
-    }
-
-    public function testGetMultiple()
-    {
-        self::bootKernel();
-        $this->faker = Factory::create();
-        $container = self::$container;
-        $categoryService = $container->get(CategoryService::class);
-        $user = $this->createUser($container);
-
-        // create second page
-        array_map(function () use ($user, $categoryService) {
-            $category = $this->createCategory();
-            $categoryService->createCategory($category, $user);
-
-            return $category;
-        }, range(1, CategoryRepository::PAGINATOR_ITEMS_PER_PAGE));
-
-        sleep(1);
-
-        $created = array_map(function () use ($user, $categoryService) {
-            $category = $this->createCategory();
-            $categoryService->createCategory($category, $user);
-            sleep(1); // hack motzno, w scali można zrobić tick time na threadzie
-
-            return $category->getId();
-        }, range(1, CategoryRepository::PAGINATOR_ITEMS_PER_PAGE));
-
-        $firstPage = array_map(function ($category) {
-            return $category->getId();
-        }, $categoryService->getAll(1)->getItems());
-
-        $this->assertEquals(array_reverse($created), $firstPage);
     }
 
     private function createUser($container): User

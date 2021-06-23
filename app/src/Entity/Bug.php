@@ -96,6 +96,12 @@ class Bug
     private $author;
 
     /**
+     * @ORM\ManyToOne(targetEntity=Status::class)
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $status;
+
+    /**
      * Getter for Id.
      *
      * @return int|null Result
@@ -205,6 +211,18 @@ class Bug
     public function setAuthor(?User $author): self
     {
         $this->author = $author;
+
+        return $this;
+    }
+
+    public function getStatus(): ?Status
+    {
+        return $this->status;
+    }
+
+    public function setStatus(?Status $status): self
+    {
+        $this->status = $status;
 
         return $this;
     }

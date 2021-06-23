@@ -26,6 +26,7 @@
                 <th>{{ knp_pagination_sortable(pagination, 'label_updated_at'|trans, 'bug.updatedAt') }}</th>
                 <th>{{ knp_pagination_sortable(pagination, 'label_title'|trans, 'bug.title') }}</th>
                 <th>{{ knp_pagination_sortable(pagination, 'label_category'|trans, 'category.title') }}</th>
+                <th>{{ 'label_tags'|trans }}</th>
                 <th>{{ knp_pagination_sortable(pagination, 'label_status'|trans, 'status.title') }}</th>
                 <th>{{ 'label_author'|trans }}</th>
                 <th>{{ 'label_actions'|trans }}</th>
@@ -39,6 +40,16 @@
                     <td>{{ bug.createdAt|format_date('long') }}</td>
                     <td>{{ bug.title }}</td>
                     <td>{{ bug.category.title }}</td>
+                    <td>
+                        {% if bug.tags is defined and bug.tags|length %}
+                            {% for tag in bug.tags %}
+                            <a href="{{ url('bug_index', {'filters.tag_id' : tag.id}) }}" title="{{ tag.title }}">
+                                {{ tag.title }}</a>{% if not loop.last %},{% endif %}
+                            {% endfor %}
+                        {% else %}
+                            &nbsp;
+                        {% endif %}
+                    </td>
                     <td>{{ bug.status.title }}</td>
                     <td>{{ bug.author.email }}</td>
                     <td>

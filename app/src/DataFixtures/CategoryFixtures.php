@@ -1,4 +1,7 @@
 <?php
+/**
+ * Category fixtures.
+ */
 
 namespace App\DataFixtures;
 
@@ -9,6 +12,8 @@ use Faker\Factory;
 
 /**
  * Class CategoryFixtures.
+ *
+ * @codeCoverageIgnore
  */
 class CategoryFixtures extends AbstractBaseFixtures implements DependentFixtureInterface
 {

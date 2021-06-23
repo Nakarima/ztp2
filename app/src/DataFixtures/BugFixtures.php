@@ -1,4 +1,7 @@
 <?php
+/**
+ * Bug fixtures.
+ */
 
 namespace App\DataFixtures;
 
@@ -8,6 +11,8 @@ use Doctrine\Persistence\ObjectManager;
 
 /**
  * Class BugFixtures.
+ *
+ * @codeCoverageIgnore
  */
 class BugFixtures extends AbstractBaseFixtures implements DependentFixtureInterface
 {
@@ -46,6 +51,9 @@ class BugFixtures extends AbstractBaseFixtures implements DependentFixtureInterf
             $bug->setCategory($this->getRandomReference('categories'));
             $bug->setAuthor($this->getRandomReference('users'));
             $bug->setStatus($this->getRandomReference('statuses'));
+            $bug->addTag($this->getRandomReference('tags'));
+            $bug->addTag($this->getRandomReference('tags'));
+            $bug->addTag($this->getRandomReference('tags'));
 
             return $bug;
         });
@@ -61,6 +69,6 @@ class BugFixtures extends AbstractBaseFixtures implements DependentFixtureInterf
      */
     public function getDependencies(): array
     {
-        return [CategoryFixtures::class, UserFixtures::class, StatusFixtures::class];
+        return [CategoryFixtures::class, UserFixtures::class, StatusFixtures::class, TagFixtures::class];
     }
 }

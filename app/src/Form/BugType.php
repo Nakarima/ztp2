@@ -8,6 +8,7 @@ namespace App\Form;
 use App\Entity\Bug;
 use App\Entity\Category;
 use App\Entity\Status;
+use App\Form\DataTransformer\TagsDataTransformer;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -20,15 +21,32 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class BugType extends AbstractType
 {
     /**
+     * Tags data transformer.
+     *
+     * @var \App\Form\DataTransformer\TagsDataTransformer
+     */
+    private $tagsDataTransformer;
+
+    /**
+     * TaskType constructor.
+     *
+     * @param \App\Form\DataTransformer\TagsDataTransformer $tagsDataTransformer Tags data transformer
+     */
+    public function __construct(TagsDataTransformer $tagsDataTransformer)
+    {
+        $this->tagsDataTransformer = $tagsDataTransformer;
+    }
+
+    /**
      * Builds the form.
      *
      * This method is called for each type in the hierarchy starting from the
      * top most type. Type extensions can further modify the form.
      *
-     * @see FormTypeExtensionInterface::buildForm()
-     *
      * @param \Symfony\Component\Form\FormBuilderInterface $builder The form builder
      * @param array                                        $options The options
+     *
+     * @see FormTypeExtensionInterface::buildForm()
      */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
@@ -72,6 +90,18 @@ class BugType extends AbstractType
                 'placeholder' => 'label_none',
                 'required' => true,
             ]
+        )->add(
+            'tags',
+            TextType::class,
+            [
+                'label' => 'label_tags',
+                'required' => false,
+                'attr' => ['max_length' => 128],
+            ]
+        );
+
+        $builder->get('tags')->addModelTransformer(
+            $this->tagsDataTransformer
         );
     }
 

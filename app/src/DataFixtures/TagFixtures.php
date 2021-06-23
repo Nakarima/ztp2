@@ -1,20 +1,21 @@
 <?php
 /**
- * Status fixtures.
+ * Tag fixtures.
  */
 
 namespace App\DataFixtures;
 
-use App\Entity\Status;
+use App\Entity\Tag;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
+use Faker\Factory;
 
 /**
- * Class StatusFixtures.
+ * Class TagFixtures.
  *
  * @codeCoverageIgnore
  */
-class StatusFixtures extends AbstractBaseFixtures implements DependentFixtureInterface
+class TagFixtures extends AbstractBaseFixtures implements DependentFixtureInterface
 {
     /**
      * Faker.
@@ -37,13 +38,13 @@ class StatusFixtures extends AbstractBaseFixtures implements DependentFixtureInt
      */
     public function loadData(ObjectManager $manager): void
     {
-        $statuses = ['solved', 'unsolved'];
+        $this->createMany(10, 'tags', function ($i) {
+            $tag = new Tag();
+            $tag->setTitle($this->faker->word);
+            $tag->setCreatedAt($this->faker->dateTimeBetween('-100 days', '-1 days'));
+            $tag->setUpdatedAt($this->faker->dateTimeBetween('-100 days', '-1 days'));
 
-        $this->createMany(2, 'statuses', function ($i) use ($statuses) {
-            $status = new Status();
-            $status->setTitle($statuses[$i]);
-
-            return $status;
+            return $tag;
         });
 
         $manager->flush();

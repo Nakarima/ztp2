@@ -5,11 +5,12 @@ namespace App\Tests;
 use App\Entity\Bug;
 use App\Entity\Category;
 use App\Entity\Status;
+use App\Entity\Tag;
 use App\Entity\User;
-use App\Repository\BugRepository;
 use App\Repository\StatusRepository;
 use App\Service\BugService;
 use App\Service\CategoryService;
+use App\Service\TagService;
 use App\Service\UserService;
 use Faker\Factory;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -114,6 +115,62 @@ class BugServiceTest extends KernelTestCase
         $this->assertEquals($newDesc, $updatedBug->getDescription());
     }
 
+    public function testAddTag()
+    {
+        self::bootKernel();
+        $this->faker = Factory::create();
+        $container = self::$container;
+        $bugService = $container->get(BugService::class);
+        $user = $this->createUser($container);
+        $category = $this->createCategory($container, $user);
+        $statuses = $this->createStatuses($container);
+        $tag = $this->createTag($container);
+
+        $bug = $this->createBug($category, $statuses[0]);
+        $bugService->createBug($bug, $user);
+        $id = $bug->getId();
+        $createdBug = $bugService->getById($id);
+
+        $createdBug->addTag($tag);
+        $bugService->updateBug($createdBug);
+        $updatedBug = $bugService->getById($id);
+
+        $this->assertEquals($tag->getId(), $updatedBug->getTags()[0]->getId());
+    }
+
+    public function testAddMultipleTags()
+    {
+        self::bootKernel();
+        $this->faker = Factory::create();
+        $container = self::$container;
+        $bugService = $container->get(BugService::class);
+        $user = $this->createUser($container);
+        $category = $this->createCategory($container, $user);
+        $statuses = $this->createStatuses($container);
+        $tag = $this->createTag($container);
+        $tag2 = $this->createTag($container);
+
+        $bug = $this->createBug($category, $statuses[0]);
+        $bugService->createBug($bug, $user);
+        $id = $bug->getId();
+        $createdBug = $bugService->getById($id);
+
+        $createdBug->addTag($tag);
+        $createdBug->addTag($tag2);
+        $bugService->updateBug($createdBug);
+        $updatedBug = $bugService->getById($id);
+
+        $expected = array_map(function ($t) {
+            return $t->getId();
+        }, [$tag, $tag2]);
+
+        $actual = array_map(function ($t) use ($updatedBug)  {
+            return $t->getId();
+        }, [$updatedBug->getTags()[0], $updatedBug->getTags()[1]]);
+
+        $this->assertEqualsCanonicalizing($expected, $actual);
+    }
+
     public function testUpdateCategory()
     {
         self::bootKernel();
@@ -205,6 +262,18 @@ class BugServiceTest extends KernelTestCase
         $categoryService->createCategory($category, $user);
 
         return $category;
+    }
+
+    private function createTag($container): Tag
+    {
+        $tagService = $container->get(TagService::class);
+
+        $tag = new Tag();
+        $title = $this->faker->word();
+        $tag->setTitle($title);
+        $tagService->createTag($tag);
+
+        return $tag;
     }
 
     private function createUser($container): User

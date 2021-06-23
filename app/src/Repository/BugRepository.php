@@ -35,11 +35,13 @@ class BugRepository extends ServiceEntityRepository
                 'partial bug.{id, createdAt, updatedAt, title}',
                 'partial category.{id, title}',
                 'partial user.{id, email}',
-                'partial status.{id, title}'
+                'partial status.{id, title}',
+                'partial tags.{id, title}'
             )
             ->join('bug.category', 'category')
             ->join('bug.author', 'user')
             ->join('bug.status', 'status')
+            ->leftJoin('bug.tags', 'tags')
             ->orderBy('bug.updatedAt', 'DESC');
     }
 

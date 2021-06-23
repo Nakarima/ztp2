@@ -45,6 +45,10 @@ security:
         - { path: ^/category/.*/edit, roles: ROLE_ADMIN}
         - { path: ^/category/.*/delete, roles: ROLE_ADMIN}
         - { path: ^/category/create, roles: ROLE_ADMIN}
+        - { path: ^/tag, roles: [IS_AUTHENTICATED_ANONYMOUSLY, ROLE_ADMIN]}
+        - { path: ^/tag/.*/edit, roles: ROLE_ADMIN}
+        - { path: ^/tag/.*/delete, roles: ROLE_ADMIN}
+        - { path: ^/tag/create, roles: ROLE_ADMIN}
         - { path: ^/bug, roles: [IS_AUTHENTICATED_ANONYMOUSLY, ROLE_ADMIN]}
         - { path: ^/bug/create, roles: ROLE_ADMIN}
         - { path: ^/bug/.*/edit, roles: ROLE_ADMIN }

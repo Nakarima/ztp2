@@ -20,6 +20,17 @@
             <dd>{{ bug.description }}</dd>
             <dt>{{ 'label_category'|trans }}</dt>
             <dd>{{ bug.category.title }}</dd>
+            <dt>{{ 'label_bugs'|trans }}</dt>
+            <dd>
+                {% if bug.tags is defined and bug.tags|length %}
+                    {% for tag in bug.tags %}
+                        <a href="{{ url('bug_index', {'filters.tag_id' : tag.id}) }}" title="{{ tag.title }}">
+                          {{ tag.title }}</a>{% if not loop.last %},{% endif %}
+                     {% endfor %}
+                {% else %}
+                    &nbsp;
+                {% endif %}
+            </dd>
             <dt>{{ 'label_status'|trans }}</dt>
             <dd>{{ bug.status.title }}</dd>
             <dt>{{ 'label_author'|trans }}</dt>

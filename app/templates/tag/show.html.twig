@@ -1,0 +1,44 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {{ 'title_tag_details'|trans({'%id%': tag.id|default('')}) }}
+{% endblock %}
+
+{% block body %}
+    <h1>{{ 'title_tag_details'|trans({'%id%': tag.id|default('')}) }}</h1>
+    {% if tag is defined and tag|length %}
+        <dl class="dl-horizontal">
+            <dt>{{ 'label_id'|trans }}</dt>
+            <dd>{{ tag.id }}</dd>
+            <dt>{{ 'label_created_at'|trans }}</dt>
+            <dd>{{ tag.createdAt|format_date('long') }}</dd>
+            <dt>{{ 'label_updated_at'|trans }}</dt>
+            <dd>{{ tag.createdAt|format_date('long') }}</dd>
+            <dt>{{ 'label_title'|trans }}</dt>
+            <dd>{{ tag.title }}</dd>
+        </dl>
+        {% if is_granted('ROLE_ADMIN') %}
+            <button type="button" class="btn btn-primary">
+                <a class="text-light" href="{{ url('tag_edit', {'tagId': tag.id}) }}"
+                   title="{{ 'action_update'|trans }}">
+                    {{ 'action_update'|trans }} </a>
+            </button>
+            {% if not tag.bugs|length %}
+                <button type="button" class="btn btn-primary">
+                    <a class="text-light" href="{{ url('tag_delete', {'tagId': tag.id}) }}"
+                       title="{{ 'action_delete'|trans }}">
+                        {{ 'action_delete'|trans }} </a>
+                </button>
+            {% endif %}
+        {% endif %}
+        <p>
+            <a href="{{ url('tag_index') }}" title="{{ 'action_back_to_list'|trans }}">
+                {{ 'action_back_to_list'|trans }}
+            </a>
+        </p>
+    {% else %}
+        <p>
+            {{ 'message_item_not_found'|trans }}
+        </p>
+    {% endif %}
+{% endblock %}

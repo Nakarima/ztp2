@@ -1,31 +1,31 @@
 <?php
 /**
- * Category repository.
+ * Tag repository.
  */
 
 namespace App\Repository;
 
-use App\Entity\Category;
+use App\Entity\Tag;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @method Category|null find($id, $lockMode = null, $lockVersion = null)
- * @method Category|null findOneBy(array $criteria, array $orderBy = null)
- * @method Category[]    findAll()
- * @method Category[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method Tag|null find($id, $lockMode = null, $lockVersion = null)
+ * @method Tag|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Tag[]    findAll()
+ * @method Tag[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class CategoryRepository extends ServiceEntityRepository
+class TagRepository extends ServiceEntityRepository
 {
     /**
-     * CategoryRepository constructor.
+     * TagRepository constructor.
      *
      * @param ManagerRegistry $registry
      */
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Category::class);
+        parent::__construct($registry, Tag::class);
     }
 
     /**
@@ -37,39 +37,54 @@ class CategoryRepository extends ServiceEntityRepository
     {
         return $this->getOrCreateQueryBuilder()
             ->select(
-                'partial category.{id, createdAt, updatedAt, title}',
-                'partial user.{id, email}',
+                'partial tag.{id, createdAt, updatedAt, title}',
             )
-            ->join('category.author', 'user')
-            ->orderBy('category.updatedAt', 'DESC');
+            ->orderBy('tag.updatedAt', 'DESC');
     }
 
     /**
      * Save record.
      *
-     * @param \App\Entity\Category $category Category entity
+     * @param \App\Entity\Tag $tag Tag entity
      *
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function save(Category $category): void
+    public function save(Tag $tag): void
     {
-        $this->_em->persist($category);
+        $this->_em->persist($tag);
         $this->_em->flush();
     }
 
     /**
      * Delete record.
      *
-     * @param \App\Entity\Category $category Category entity
+     * @param \App\Entity\Tag $tag Tag entity
      *
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function delete(Category $category): void
+    public function delete(Tag $tag): void
     {
-        $this->_em->remove($category);
+        $this->_em->remove($tag);
         $this->_em->flush();
+    }
+
+    /**
+     * @param $value
+     *
+     * @return Tag|null
+     *
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function findOneByTitle($value): ?Tag
+    {
+        return $this->createQueryBuilder('tag')
+            ->andWhere('tag.code = :val')
+            ->setParameter('val', $value)
+            ->getQuery()
+            ->getOneOrNullResult()
+            ;
     }
 
     /**
@@ -81,11 +96,11 @@ class CategoryRepository extends ServiceEntityRepository
      */
     private function getOrCreateQueryBuilder(QueryBuilder $queryBuilder = null): QueryBuilder
     {
-        return $queryBuilder ?? $this->createQueryBuilder('category');
+        return $queryBuilder ?? $this->createQueryBuilder('tag');
     }
 
     // /**
-    //  * @return Category[] Returns an array of Category objects
+    //  * @return Tag[] Returns an array of Tag objects
     //  */
     /*
     public function findByExampleField($value)
@@ -97,18 +112,6 @@ class CategoryRepository extends ServiceEntityRepository
             ->setMaxResults(10)
             ->getQuery()
             ->getResult()
-        ;
-    }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?Category
-    {
-        return $this->createQueryBuilder('c')
-            ->andWhere('c.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
         ;
     }
     */

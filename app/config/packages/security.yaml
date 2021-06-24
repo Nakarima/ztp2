@@ -41,11 +41,11 @@ security:
         # - { path: ^/admin, roles: ROLE_ADMIN }
         # - { path: ^/profile, roles: ROLE_USER }
         - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY}
-        - { path: ^/category, roles: [IS_AUTHENTICATED_ANONYMOUSLY, ROLE_ADMIN]}
+        - { path: ^/category, roles: [ROLE_ADMIN]}
         - { path: ^/category/.*/edit, roles: ROLE_ADMIN}
         - { path: ^/category/.*/delete, roles: ROLE_ADMIN}
         - { path: ^/category/create, roles: ROLE_ADMIN}
-        - { path: ^/tag, roles: [IS_AUTHENTICATED_ANONYMOUSLY, ROLE_ADMIN]}
+        - { path: ^/tag, roles: [ROLE_ADMIN]}
         - { path: ^/tag/.*/edit, roles: ROLE_ADMIN}
         - { path: ^/tag/.*/delete, roles: ROLE_ADMIN}
         - { path: ^/tag/create, roles: ROLE_ADMIN}
@@ -53,4 +53,4 @@ security:
         - { path: ^/bug/create, roles: ROLE_ADMIN}
         - { path: ^/bug/.*/edit, roles: ROLE_ADMIN }
         - { path: ^/bug/.*/delete, roles: ROLE_ADMIN }
-        - { path: ^/, roles: ROLE_ADMIN}
+        - { path: ^/, roles: [IS_AUTHENTICATED_ANONYMOUSLY, ROLE_ADMIN]}

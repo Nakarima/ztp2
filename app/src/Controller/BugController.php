@@ -18,7 +18,7 @@ use Symfony\Component\Routing\Annotation\Route;
 /**
  * Class BugController.
  *
- * @Route("/bug")
+ * @Route("/")
  */
 class BugController extends AbstractController
 {
@@ -72,7 +72,7 @@ class BugController extends AbstractController
      * @return \Symfony\Component\HttpFoundation\Response HTTP response
      *
      * @Route(
-     *     "/{bugId}",
+     *     "/bug/{bugId}",
      *     methods={"GET"},
      *     name="bug_show",
      *     requirements={"bugId": "[1-9]\d*"},
@@ -99,7 +99,7 @@ class BugController extends AbstractController
      * @throws \Doctrine\ORM\OptimisticLockException
      *
      * @Route(
-     *     "/create",
+     *     "/bug/create",
      *     methods={"GET", "POST"},
      *     name="bug_create",
      * )
@@ -137,7 +137,7 @@ class BugController extends AbstractController
      * @throws \Doctrine\ORM\OptimisticLockException
      *
      * @Route(
-     *     "/{bugId}/edit",
+     *     "/bug/{bugId}/edit",
      *     methods={"GET", "PUT"},
      *     requirements={"bugId": "[1-9]\d*"},
      *     name="bug_edit",
@@ -180,7 +180,7 @@ class BugController extends AbstractController
      * @throws \Doctrine\ORM\OptimisticLockException
      *
      * @Route(
-     *     "/{bugId}/delete",
+     *     "/bug/{bugId}/delete",
      *     methods={"GET", "DELETE"},
      *     requirements={"bugId": "[1-9]\d*"},
      *     name="bug_delete",

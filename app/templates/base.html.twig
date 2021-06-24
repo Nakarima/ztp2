@@ -11,16 +11,37 @@
     {% endblock %}
 </head>
 <body>
-{% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
-    <div>{{ app.user.email }}</div>
-    <div>
-        <a href="{{ url('app_logout') }}">{{ 'action_logout'|trans }}</a>
+<nav class="navbar navbar-expand-md navbar-dark bg-dark">
+    <div class="navbar-collapse collapse w-100 order-1 order-md-0 dual-collapse2">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <a class="nav-link" href=" {{ url('bug_index') }}">{{ 'action_home'|trans }}</a>
+            </li>
+            {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+                <li class="nav-item">
+                    <a class="nav-link" href=" {{ url('category_index') }}">{{ 'action_category'|trans }}</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href=" {{ url('tag_index') }}">{{ 'action_tag'|trans }}</a>
+                </li>
+            {% endif %}
+        </ul>
     </div>
-{% else %}
-    <div>
-        <a href="{{ url('app_login') }}">{{ 'action_login'|trans }}</a>
+    <div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
+        <ul class="navbar-nav ml-auto">
+            {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+                <li class="nav-item"><p class="navbar-text mb-0">{{ app.user.email }}</p></li>
+                <li>
+                    <a class="nav-link" href="{{ url('app_logout') }}">{{ 'action_logout'|trans }}</a>
+                </li>
+            {% else %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url('app_login') }}">{{ 'action_login'|trans }}</a>
+                </li>
+            {% endif %}
+        </ul>
     </div>
-{% endif %}
+</nav>
 
 <div class="container-md">
     {% include 'default/_flash_messages.html.twig' %}

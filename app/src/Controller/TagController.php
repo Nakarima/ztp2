@@ -202,7 +202,7 @@ class TagController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->tagService->deleteTag($tag);
-            $this->addFlash('success', 'message.deleted_successfully');
+            $this->addFlash('success', 'message_deleted_successfully');
 
             return $this->redirectToRoute('tag_index');
         }

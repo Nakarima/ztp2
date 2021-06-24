@@ -200,7 +200,7 @@ class BugController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->bugService->deleteBug($bug);
-            $this->addFlash('success', 'message.deleted_successfully');
+            $this->addFlash('success', 'message_deleted_successfully');
 
             return $this->redirectToRoute('bug_index');
         }

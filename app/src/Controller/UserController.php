@@ -197,7 +197,7 @@ class UserController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->userService->deleteUser($user);
-            $this->addFlash('success', 'message.deleted_successfully');
+            $this->addFlash('success', 'message_deleted_successfully');
 
             return $this->redirectToRoute('user_index');
         }

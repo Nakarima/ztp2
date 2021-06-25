@@ -83,7 +83,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\App\\Controller\\SecurityController",
             "name": "SecurityController",
-            "summary": "",
+            "summary": "Class\u0020SecurityController.",
             "url": "classes/App-Controller-SecurityController.html"
         },                {
             "fqsen": "\\App\\Controller\\SecurityController\u003A\u003Alogin\u0028\u0029",
@@ -503,7 +503,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\App\\Entity\\Category\u003A\u003A__construct\u0028\u0029",
             "name": "__construct",
-            "summary": "",
+            "summary": "Category\u0020constructor.",
             "url": "classes/App-Entity-Category.html#method___construct"
         },                {
             "fqsen": "\\App\\Entity\\Category\u003A\u003AgetId\u0028\u0029",
@@ -550,11 +550,6 @@ Search.appendIndex(
             "name": "addBug",
             "summary": "",
             "url": "classes/App-Entity-Category.html#method_addBug"
-        },                {
-            "fqsen": "\\App\\Entity\\Category\u003A\u003AremoveBug\u0028\u0029",
-            "name": "removeBug",
-            "summary": "",
-            "url": "classes/App-Entity-Category.html#method_removeBug"
         },                {
             "fqsen": "\\App\\Entity\\Category\u003A\u003AgetCode\u0028\u0029",
             "name": "getCode",
@@ -943,7 +938,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\App\\Kernel",
             "name": "Kernel",
-            "summary": "",
+            "summary": "Class\u0020Kernel.",
             "url": "classes/App-Kernel.html"
         },                {
             "fqsen": "\\App\\Kernel\u003A\u003AregisterBundles\u0028\u0029",
@@ -1111,15 +1106,15 @@ Search.appendIndex(
             "summary": "Save\u0020record.",
             "url": "classes/App-Repository-UserRepository.html#method_save"
         },                {
-            "fqsen": "\\App\\Repository\\UserRepository\u003A\u003AgetOrCreateQueryBuilder\u0028\u0029",
-            "name": "getOrCreateQueryBuilder",
-            "summary": "Get\u0020or\u0020create\u0020new\u0020query\u0020builder.",
-            "url": "classes/App-Repository-UserRepository.html#method_getOrCreateQueryBuilder"
-        },                {
             "fqsen": "\\App\\Repository\\UserRepository\u003A\u003Adelete\u0028\u0029",
             "name": "delete",
             "summary": "Delete\u0020record.",
             "url": "classes/App-Repository-UserRepository.html#method_delete"
+        },                {
+            "fqsen": "\\App\\Repository\\UserRepository\u003A\u003AgetOrCreateQueryBuilder\u0028\u0029",
+            "name": "getOrCreateQueryBuilder",
+            "summary": "Get\u0020or\u0020create\u0020new\u0020query\u0020builder.",
+            "url": "classes/App-Repository-UserRepository.html#method_getOrCreateQueryBuilder"
         },                {
             "fqsen": "\\App\\Repository\\UserRepository\u003A\u003APAGINATOR_ITEMS_PER_PAGE",
             "name": "PAGINATOR_ITEMS_PER_PAGE",

@@ -39,7 +39,7 @@ class TagService
     /**
      * TagController constructor.
      *
-     * @param TagRepository $tagRepository
+     * @param TagRepository      $tagRepository
      * @param PaginatorInterface $paginator
      */
     public function __construct(TagRepository $tagRepository, PaginatorInterface $paginator)
@@ -82,6 +82,8 @@ class TagService
      * @param string $title
      *
      * @return Tag|null
+     *
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function getByTitle(string $title): ?Tag
     {

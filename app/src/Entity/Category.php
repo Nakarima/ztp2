@@ -102,6 +102,9 @@ class Category
      */
     private $author;
 
+    /**
+     * Category constructor.
+     */
     public function __construct()
     {
         $this->bugs = new ArrayCollection();
@@ -185,23 +188,16 @@ class Category
         return $this->bugs;
     }
 
+    /**
+     * @param Bug $bug
+     *
+     * @return $this
+     */
     public function addBug(Bug $bug): self
     {
         if (!$this->bugs->contains($bug)) {
             $this->bugs[] = $bug;
             $bug->setCategory($this);
-        }
-
-        return $this;
-    }
-
-    public function removeBug(Bug $bug): self
-    {
-        if ($this->bugs->removeElement($bug)) {
-            // set the owning side to null (unless already changed)
-            if ($bug->getCategory() === $this) {
-                $bug->setCategory(null);
-            }
         }
 
         return $this;
@@ -227,11 +223,19 @@ class Category
         $this->code = $code;
     }
 
+    /**
+     * @return User|null
+     */
     public function getAuthor(): ?User
     {
         return $this->author;
     }
 
+    /**
+     * @param User|null $author
+     *
+     * @return $this
+     */
     public function setAuthor(?User $author): self
     {
         $this->author = $author;

@@ -20,7 +20,7 @@
             <dd>{{ bug.description }}</dd>
             <dt>{{ 'label_category'|trans }}</dt>
             <dd>{{ bug.category.title }}</dd>
-            <dt>{{ 'label_bugs'|trans }}</dt>
+            <dt>{{ 'label_tags'|trans }}</dt>
             <dd>
                 {% if bug.tags is defined and bug.tags|length %}
                     {% for tag in bug.tags %}

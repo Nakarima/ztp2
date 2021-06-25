@@ -154,6 +154,30 @@
                 <source>message_tag_contains_bugs</source>
                 <target>Tag zawiera bugi</target>
             </trans-unit>
+            <trans-unit id="title_category_edit">
+                <source>title_category_edit</source>
+                <target>Edytuj kategorię</target>
+            </trans-unit>
+            <trans-unit id="title_category_delete">
+                <source>title_category_delete</source>
+                <target>Usuń kategorię</target>
+            </trans-unit>
+            <trans-unit id="title_bug_edit">
+                <source>title_bug_edit</source>
+                <target>Edytuj buga</target>
+            </trans-unit>
+            <trans-unit id="title_bug_delete">
+                <source>title_bug_delete</source>
+                <target>Usuń buga</target>
+            </trans-unit>
+            <trans-unit id="title_tag_edit">
+                <source>title_tag_edit</source>
+                <target>Edytuj tag</target>
+            </trans-unit>
+            <trans-unit id="title_tag_delete">
+                <source>title_tag_delete</source>
+                <target>Usuń tag</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

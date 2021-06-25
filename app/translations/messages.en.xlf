@@ -178,6 +178,34 @@
                 <source>title_tag_delete</source>
                 <target>Delete tag</target>
             </trans-unit>
+            <trans-unit id="title_tag_create">
+                <source>title_tag_create</source>
+                <target>Create tag</target>
+            </trans-unit>
+            <trans-unit id="title_category_create">
+                <source>title_category_create</source>
+                <target>Create category</target>
+            </trans-unit>
+            <trans-unit id="title_bug_create">
+                <source>title_bug_create</source>
+                <target>Create bug</target>
+            </trans-unit>
+            <trans-unit id="label_none">
+                <source>label_none</source>
+                <target>choose...</target>
+            </trans-unit>
+            <trans-unit id="title_sign_in">
+                <source>title_sign_in</source>
+                <target>Please sign in</target>
+            </trans-unit>
+            <trans-unit id="email_sign_in">
+                <source>email_sign_in</source>
+                <target>Email</target>
+            </trans-unit>
+            <trans-unit id="password_sign_in">
+                <source>password_sign_in</source>
+                <target>Password</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
